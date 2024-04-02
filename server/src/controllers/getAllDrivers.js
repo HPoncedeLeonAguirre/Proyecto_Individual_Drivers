@@ -1,15 +1,24 @@
-const axios = require('axios');
-const { Driver, Team } = require('../db')
+const fs = require('fs');
+const path = require('path');
 
-const getAllDrivers = async (req, res) => {
+const getDriversPathJSON = path.join(__dirname, "../../api/db.json");
+
+const getAllDrivers = () => {
     try {
-        const response = await axios.get('http://localhost:5000/drivers');
-        const drivers = response.data;
+        const dataDrivers = fs.readFileSync(getDriversPathJSON, 'utf8');
+        const jsonDrivers = JSON.parse(dataDrivers);
+        const drivers = jsonDrivers.drivers;
 
-        res.json(drivers);
+        drivers.forEach((driver) => {
+            if(!driver.image.url) {
+                driver.image = { url: '/assets/img-default.jpg' };
+            }
+        });
+        return drivers;
+
     } catch (error) {
-        console.log(error);
-        res.status(500).json({message: 'Error al obtener los drivers'});
+        console.error('Hubo un error al obtener los drivers: ', error);
+        throw new Error('Error interno del servidor');
     }
 };
 

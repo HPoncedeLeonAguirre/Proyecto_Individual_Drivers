@@ -18,19 +18,19 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     description:{
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     image:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     nationality:{
       type: DataTypes.STRING,
       allowNull: false
     },
     birthdate:{
-      type: DataTypes.INTEGER,
+      type: DataTypes.DATEONLY,
       allowNull: false
     }
   });
