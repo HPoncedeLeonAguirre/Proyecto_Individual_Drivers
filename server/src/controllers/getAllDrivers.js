@@ -1,19 +1,37 @@
 const fs = require('fs');
 const path = require('path');
 
+const { Driver, Team } = require('../db');
+
 const getDriversPathJSON = path.join(__dirname, "../../api/db.json");
 
-const getAllDrivers = () => {
+const getAllDrivers = async () => {
     try {
         const dataDrivers = fs.readFileSync(getDriversPathJSON, 'utf8');
         const jsonDrivers = JSON.parse(dataDrivers);
-        const drivers = jsonDrivers.drivers;
+        const apiDrivers = jsonDrivers.drivers;
+
+        const dbDrivers = await Driver.findAll({
+            include: [{ model: Team, through: 'driver_team' }]
+        });
+
+        const drivers = [...dbDrivers, ...apiDrivers].reduce((acc, driver) => {
+            const existDriver = acc.find(d => d.id === driver.id);
+            if(!existDriver){
+                acc.push(driver);
+            } else {
+                existDriver.teams = driver.teams;
+            }
+            return acc;
+        }, []);
 
         drivers.forEach((driver) => {
-            if(!driver.image.url) {
-                driver.image = { url: '/assets/img-default.jpg' };
+            if(!driver.image || !driver.image.url) {
+                driver.image = driver.image || {};
+                driver.image.url = '/assets/img-default.jpg';
             }
         });
+
         return drivers;
 
     } catch (error) {
