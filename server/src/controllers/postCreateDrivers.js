@@ -1,24 +1,39 @@
-const { Driver, Team } = require('../db');
+const { Driver, Team } = require("../db");
 
-const postCreateDrivers = async (dataDriver) => {
+const postCreateDrivers = async (
+    forename,
+    surname,
+    description,
+    image,
+    nationality,
+    dob,
+    teams
+) => {
     try {
-        const newDriver = await Driver.create(dataDriver);
+        const newDriver = await Driver.create({
+            forename,
+            surname,
+            description,
+            image,
+            nationality,
+            dob,
+    });
 
-        if(dataDriver.teams && Array.isArray(dataDriver.teams)) {
-            const teams = await Team.findAll({
-                where: {
-                    id:dataDriver.teams
-                }
-            });
-            await newDriver.setTeams(teams);
-        }
-        return newDriver;
+    const teamNames = teams.split(",").map((team) => team.trim());
+    const searchTeams = await Team.findAll({
+        where: {
+            name: teamNames,
+        },
+    });
+    await newDriver.addTeams(searchTeams);
+
+    return { message: "Conductor creado exitosamente", driver: newDriver };
     } catch (error) {
-        console.error('Hubo un error al crear el driver: ', error);
-        throw new Error('Hubo un error al crear el driver');
+        console.error("Hubo un error al crear el driver:", error);
+        throw new Error("Hubo un error al crear el driver");
     }
 };
 
-module.exports = {
+module.exports = { 
     postCreateDrivers
 };

@@ -1,6 +1,7 @@
 const axios = require('axios');
+const { Op } = require('sequelize');
 
-const { Driver, Team, Op } = require('../db');
+const { Driver, Team } = require('../db');
 
 const getDriversByNameDB = async (name) => {
     try {
