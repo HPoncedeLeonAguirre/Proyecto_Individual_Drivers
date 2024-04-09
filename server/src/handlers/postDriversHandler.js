@@ -6,7 +6,7 @@ const postDriversHandler = async (req, res) => {
         const { forename, surname, description, image, nationality, dob, teams } =
         req.body;
 
-        const newDriver = await postCreateDrivers(
+        const newDriverResult = await postCreateDrivers(
             forename,
             surname,
             description,
@@ -15,7 +15,7 @@ const postDriversHandler = async (req, res) => {
             dob,
             teams
     );
-        res.status(200).json(newDriver);
+        res.status(200).json(newDriverResult);
     } catch (error) {
         console.error("Hubo un error en el handler de crear un driver:", error);
         res.status(500).json({ error: "Error interno del servidor" });
