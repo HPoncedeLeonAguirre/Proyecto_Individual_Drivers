@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import Card from '../../Components/Card/Card';
 import Filter from '../../Components/Filter/Filter';
-import "../Home/home.css";
 import {
     fetchDrivers,
     setFilter,
     setPaginate
 } from '../../Redux/Actions/actions';
+import '../Home/home.css';
 
 const Home = () => {
     const [loading, setLoading] = useState(true);
