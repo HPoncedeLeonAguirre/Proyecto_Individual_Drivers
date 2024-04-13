@@ -2,11 +2,11 @@ const axios = require('axios');
 
 const { Team } = require('../db');
 
-const getAllTeams = async (req, res) => {
+const getAllTeams = async () => {
     try {
         const dbTeams = await Team.findAll();
         if(dbTeams.length === 0) {
-            const response = await axios.get("http://localhost:5000/drivers");
+            const response = await axios.get("http://localhost:3001/drivers");
             const drivers = response.data;
 
             const saveTeams = []
@@ -25,7 +25,7 @@ const getAllTeams = async (req, res) => {
             await Team.bulkCreate(saveTeams, { individualHooks: true });
         }
         const allTeams = await Team.findAll();
-        res.json(allTeams);
+        return allTeams;
     } catch (error) {
         console.error('Hubo un error al obtener los teams:', error);
         res.status(500).json({ error: 'Error interno del servidor' });

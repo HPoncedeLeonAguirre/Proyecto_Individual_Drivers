@@ -1,22 +1,22 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { searchDrivers } from "../../Redux/Actions/actions";
+import './searchbar.css';
 
 const SearchBar = () => {
     const [name, setName] = useState("");
     const dispatch = useDispatch();
-
     const handleChange = (event) => {
         setName(event.target.value);
+        console.log("Nombre ingresado:", event.target.value);
     };
-
     const search = () => {
         if(name.trim() !== ""){
+            console.log("Nombre buscado:", name);
             dispatch(searchDrivers(name));
             setName("");
         }
     };
-
     return (
         <div className="searchBar">
             <input

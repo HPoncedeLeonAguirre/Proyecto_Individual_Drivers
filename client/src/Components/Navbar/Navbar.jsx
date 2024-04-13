@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import SearchBar from "../Searchbar/Searchbar";
+import './navbar.css';
 
 const Navbar = () => {
     const { pathname } = useLocation();
@@ -15,7 +16,7 @@ const Navbar = () => {
                     <button className="navButton">Home</button>
                 </Link>
                 <Link to={"/form"}>
-                    <button className="navButton">Crear conductor</button>
+                    <button className="navButton">Create</button>
                 </Link>
                 <div>
                     {pathname === "/home" && <SearchBar />}

@@ -19,7 +19,7 @@ const getDriversByIdDB = async (id) => {
 
 const getDriversByIdServer = async (id) => {
     try{
-        const response = await axios.get('http://localhost:5000/drivers');
+        const response = await axios.get('http://localhost:3001/drivers');
         const apiDrivers = response.data;
         
         const drivers = apiDrivers.filter((driver) => driver.id.toString() === id);

@@ -1,0 +1,62 @@
+a{
+    text-decoration: none;
+}
+
+.navHeader {
+    background: #071534;
+    background: radial-gradient(circle farthest-corner at center center, #071534 0%, #470303 200%);
+    background: -webkit-radial-gradient(circle farthest-corner at center center, #071534 0%, #001077 200%);
+    background: -moz-radial-gradient(circle farthest-corner at center center, #071534 0%, #001077 200%);
+    border-bottom: solid rgb(123, 123, 123) 1px;
+    padding: 30px;
+    height: 6vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
+}
+
+.navLogo{
+    height: 100px;
+}
+
+.navButtons {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-right: 20px;
+}
+
+.navButton {
+    margin-right: 20px;
+    background-color: #fff;
+    color: #900;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 22px;
+    transition: all 0.3s ease;
+    height: 50px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    text-shadow: 0px 0px 2px white;
+    box-shadow: 0px 8px 15px #900;
+}
+
+.navButtonClose{
+    margin-right: 130px;
+}
+
+.navButton:hover {
+    background-color: #900;
+    color: #fff;
+    border: #fff;
+    box-shadow: none;
+}

@@ -10,17 +10,17 @@ import {
     CREATE_DRIVER_REQUEST,
     CREATE_DRIVER_SUCCESS,
     CREATE_DRIVER_ERROR
-} from "../Actions/actions-types";
+} from "../Actions/actions-types.js";
 
 export const clusterDriversFilter = (
-    filteredDrivers,
+    allDrivers,
     newDrivers,
     selectedOrder,
     selectDirection
 ) => {
-    const clusteredDrivers = [...filteredDrivers];
+    const clusteredDrivers = [...allDrivers];
     newDrivers.forEach((driver) => {
-        if (!filteredDrivers.some((existDriver) => existDriver.id === driver.id)){
+        if (!allDrivers.some((existDriver) => existDriver.id === driver.id)){
             clusteredDrivers.push(driver);
         }
     });
@@ -30,8 +30,8 @@ export const clusterDriversFilter = (
 export const fetchDriverById = (id) => {
     return async (dispatch) => {
         try {
-            const reponse = await axios.get(`http://localhost:5000/drivers/${id}`);
-            const data = reponse.data;
+            const response = await axios.get(`http://localhost:3001/drivers/${id}`);
+            const data = response.data;
 
             if(Array.isArray(data) && data.length > 0){
                 dispatch({
@@ -55,22 +55,22 @@ export const fetchDriverById = (id) => {
 export const searchDrivers = (name) => {
     return async (dispatch, getState) => {
         try {
-            const response = await axios.get(`http://localhost:5000/drivers?name.forename=${name}`);
+            const response = await axios.get(`http://localhost:3001/drivers?name=${name}`);
             const { data } = response;
             const currentState = getState();
 
             if(!Array.isArray(data) || data.length === 0){
                 return;
             }
-            const filteredDrivers = data.filter((driver) => {
-                return !currentState.drievrs.some((existDriver) => existDriver.id === driver.id);
+            const allDrivers = data.filter((driver) => {
+                return !currentState.drivers.some((existDriver) => existDriver.id === driver.id);
             });
-            if(filteredDrivers.length === 0){
+            if(allDrivers.length === 0){
                 return;
             }
             dispatch({
                 type: SEARCH_DRIVERS,
-                payload: filteredDrivers,
+                payload: allDrivers,
             });
         } catch (error) {
             console.error('Hubo un error al buscar los conductores:', error);
@@ -82,7 +82,7 @@ export const searchDrivers = (name) => {
 export const searchDriverByName = (name) => {
     return async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/drivers?name.forename=${name}`);
+            const response = await axios.get(`http://localhost:3001/drivers?name=${name}`);
             const { data } = response;
 
             if(!Array.isArray(data) || data.length === 0){
@@ -99,8 +99,8 @@ export const searchDriverByName = (name) => {
 export const fetchDrivers = () => {
     return async (dispatch) => {
         try {
-            const response = await axios.get('http://localhost:5000/drivers');
-            const data = response.data.slice(0, 3);
+            const response = await axios.get('http://localhost:3001/drivers');
+            const data = response.data.slice(0, 30);
 
             dispatch({
                 type: FETCH_DRIVERS,
@@ -154,7 +154,7 @@ export const sortDrivers = (drivers, selectedOrder, selectDirection) => {
             return selectDirection === "ASC" ? compareOrder : -compareOrder;
         });
     } else if (selectedOrder === "dob") {
-        sortDrivers.sort((a, b) => {
+        sortedDrivers.sort((a, b) => {
             const dobA = new Date(a.dob);
             const dobB = new Date(b.dob);
             return selectDirection === "ASC" ? dobA - dobB : dobB - dobA;
@@ -167,7 +167,7 @@ export const createDriverRequest = (driverData) => {
     return async (dispatch) => {
         dispatch({ type: CREATE_DRIVER_REQUEST });
         try {
-            await axios.post('http://localhost:5000/drivers', driverData);
+            await axios.post('http://localhost:3001/drivers', driverData);
             dispatch({ type: CREATE_DRIVER_SUCCESS });
         } catch (error) {
             dispatch({ type: CREATE_DRIVER_ERROR, payload: error.message });

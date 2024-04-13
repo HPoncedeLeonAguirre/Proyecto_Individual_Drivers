@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import "../Landing/landing.css";
+import "./landing.css";
 
 const Landing = () => {
     return (

@@ -33,12 +33,6 @@
     margin-bottom: 10vh;
 }
 
-.imgHamilton {
-    height: 85vh;
-    margin-right: 150px;
-    margin-top: auto;
-}
-
 .imgLanding {
     animation: jump 1s infinite alternate;
     height: 4vw;
@@ -58,14 +52,15 @@
 }
 
 .buttonLanding {
+    margin-left: 370px;
     padding: 1rem 3rem;
     border: none;
-    background: #172c41;
+    background: #fff;
     text-align: center;
     border-top-left-radius: 15px;
     border-bottom-right-radius: 15px;
     box-shadow: 3px 3px 6px #000000;
-    color: white;
+    color: #900;
     font-size: 45px;
     font-weight: bold;
     letter-spacing: 2px;
@@ -78,6 +73,6 @@
 
 .buttonLanding:hover {
     transform: translate(5px, -5px);
-    background: #0c1f2d;
+    background: #fff;
     text-shadow: none;
 }

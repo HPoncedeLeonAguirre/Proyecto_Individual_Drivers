@@ -62,7 +62,7 @@ const validateTeams = (teams, allTeams) => {
     return arrayTeams.every((team) => toLowerCaseAllTeams.includes(team));
 };
 
-const existDriver = async (forename, surname) => {
+const isDriverExists = async (forename, surname) => {
     try{
         const existDataDriver = await searchDriverByName(`${forename} ${surname}`)();
         return !!existDataDriver;
@@ -99,7 +99,7 @@ export {
     validateName,
     validateImage,
     validateTeams,
-    existDriver,
+    isDriverExists,
     mayusFirstLetter,
     mayusFirstWord,
     dobFormat

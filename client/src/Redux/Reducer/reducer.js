@@ -15,7 +15,7 @@ import {
 
 let initialState = {
     drivers: [],
-    filteredDrivers: [],
+    allDrivers: [],
     driver: {},
     loading: false,
     error: null,
@@ -26,7 +26,7 @@ let initialState = {
     filter: {
         origin: "all",
         teams: "all",
-    },
+    }
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -36,40 +36,46 @@ const rootReducer = (state = initialState, action) => {
     let clusteredDrivers;
     let sortedDriversByName;
     let sortedDriversByDob;
-    let filteredDrivers;
+    let allDrivers;
 
     switch (action.type) {
         case SEARCH_DRIVERS:
             searchFilteredDrivers = action.payload.filter((driver) => 
                 state.drivers.every((existDriver) => existDriver.id !== driver.id)
             );
+
             searchOrderedFilteredDrivers = sortDrivers(
                 searchFilteredDrivers,
                 state.selectedOrder,
                 state.selectedDirection
             );
+            
             newDrivers = [
                 ...searchOrderedFilteredDrivers.filter((driver) => 
                 !state.drivers.some((existDriver) => existDriver.id === driver.id)),
                 ...state.drivers,
             ];
+
             clusteredDrivers = clusterDriversFilter(
-                state.filteredDrivers,
+                state.allDrivers,
                 newDrivers,
                 state.selectedOrder,
                 state.selectedDirection
             );
-            return {
+
+            const newState = {
                 ...state,
                 drivers: newDrivers,
-                filteredDrivers: clusteredDrivers
+                allDrivers: clusteredDrivers
             };
+            return newState;
+
         case FETCH_DRIVERS:
             if(state.drivers.length === 0) {
                 return {
                     ...state,
                     drivers: action.payload,
-                    filteredDrivers: action.payload,
+                    allDrivers: action.payload,
                     loading: false
                 };
             } else {
@@ -93,7 +99,7 @@ const rootReducer = (state = initialState, action) => {
             };
         case ORDER_BY_NAME:
             sortedDriversByName = sortDrivers(
-                state.filteredDrivers,
+                state.allDrivers,
                 "name",
                 action.payload
             );
@@ -101,11 +107,11 @@ const rootReducer = (state = initialState, action) => {
                 ...state,
                 selectedOrder: "name",
                 selectedDirection: action.payload,
-                filteredDrivers: sortedDriversByName
+                allDrivers: sortedDriversByName
             };
         case ORDER_BY_DOB:
             sortedDriversByDob = sortDrivers(
-                state.filteredDrivers,
+                state.allDrivers,
                 "dob",
                 action.payload
             );
@@ -113,12 +119,12 @@ const rootReducer = (state = initialState, action) => {
                 ...state,
                 selectedOrder: "dob",
                 selectedDirection: action.payload,
-                filteredDrivers: sortedDriversByDob
+                allDrivers: sortedDriversByDob
             };
         case FILTER:
             const { teams, origin } = action.payload
             if(teams !== "all") {
-                filteredDrivers = state.drivers.filter((driver) => {
+                allDrivers = state.drivers.filter((driver) => {
                     return (
                         driver && ((Array.isArray(driver?.Teams) && driver.Teams.some((team) => 
                         team.name === teams)) || (typeof driver.teams === "string" && 
@@ -126,15 +132,15 @@ const rootReducer = (state = initialState, action) => {
                     );
                 });
             } else {
-                filteredDrivers = state.drivers;
+                allDrivers = state.drivers;
             };
             if(origin === "API") {
-                filteredDrivers = filteredDrivers.filter((driver) => driver && driver.driverRef);
+                allDrivers = allDrivers.filter((driver) => driver && driver.driverRef);
             } else if (origin === "DB") {
-                filteredDrivers = filteredDrivers.filter((driver) => driver && !driver.driverRef);
+                allDrivers = allDrivers.filter((driver) => driver && !driver.driverRef);
             };
-            filteredDrivers = sortDrivers(
-                filteredDrivers,
+            allDrivers = sortDrivers(
+                allDrivers,
                 state.selectedOrder,
                 state.selectedDirection
             );
@@ -145,7 +151,7 @@ const rootReducer = (state = initialState, action) => {
                     teams: action.payload.teams,
                     origin: action.payload.origin
                 },
-                filteredDrivers: filteredDrivers
+                allDrivers: allDrivers
             };
         case CREATE_DRIVER_REQUEST:
             return {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setOrderByName, setOrderByDob } from '../../Redux/Actions/actions';
+import './filter.css';
 
 const Filter = ({ teams, handleFilter }) => {
     const globalStateFilter = useSelector((state) => state.filter);
@@ -69,7 +70,7 @@ const Filter = ({ teams, handleFilter }) => {
                 className='selectOrderHome' name='teams'>
                     <option value="all">Todos los teams</option>
                     {teams.map((team) => (
-                        <option key={team} value={team}>{team}</option>
+                        <option key={team.id} value={team.id}>{team.name}</option>
                     ))}
                 </select>
             </div>
