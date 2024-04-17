@@ -16,7 +16,7 @@ export const clusterDriversFilter = (
     allDrivers,
     newDrivers,
     selectedOrder,
-    selectDirection
+    selectedDirection
 ) => {
     const clusteredDrivers = [...allDrivers];
     newDrivers.forEach((driver) => {
@@ -24,7 +24,7 @@ export const clusterDriversFilter = (
             clusteredDrivers.push(driver);
         }
     });
-    return sortDrivers(clusteredDrivers, selectedOrder, selectDirection);
+    return sortDrivers(clusteredDrivers, selectedOrder, selectedDirection);
 };
 
 export const fetchDriverById = (id) => {
@@ -100,7 +100,7 @@ export const fetchDrivers = () => {
     return async (dispatch) => {
         try {
             const response = await axios.get('http://localhost:3001/drivers');
-            const data = response.data.slice(0, 30);
+            const data = response.data.slice(0, 27);
 
             dispatch({
                 type: FETCH_DRIVERS,

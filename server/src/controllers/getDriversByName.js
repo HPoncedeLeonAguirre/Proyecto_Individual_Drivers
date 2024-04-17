@@ -24,7 +24,9 @@ const getDriversByNameServer = async (name) => {
         
         const nameLowerCase = name.toLowerCase();
         const drivers = apiDrivers.filter((driver) => {
-            const fullName = `${driver.name.forename} ${driver.name.surname}`.toLowerCase();
+            const fullName = (driver.name && driver.name.forename && driver.name.surname) 
+            ? `${driver.name.forename} ${driver.name.surname}`.toLowerCase() 
+            : '';
             return fullName.includes(nameLowerCase);
         });
         return drivers;
@@ -34,7 +36,19 @@ const getDriversByNameServer = async (name) => {
     }
 };
 
+const getDriversByName = async (name) => {
+    try {
+        let dbResults = await getDriversByNameDB(name);
+        if(dbResults.length === 0){
+            return await getDriversByNameServer(name);
+        }
+        return dbResults;
+    } catch (error) {
+        console.error('Hubo un error al obtener los drivers por nombre: ', error);
+        throw new Error('Hubo un error al obtener los drivers por nombre');
+    }
+};
+
 module.exports = {
-    getDriversByNameDB,
-    getDriversByNameServer,
+    getDriversByName
 };

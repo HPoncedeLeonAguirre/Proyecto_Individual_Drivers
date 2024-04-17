@@ -1,4 +1,4 @@
-import { all } from "axios";
+
 import { searchDriverByName } from "../../Redux/Actions/actions";
 
 const validateFields = (
@@ -22,22 +22,32 @@ const validateFields = (
 };
 
 const validateDate = (dob) => {
-    const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-    if(!dateRegex.test(dob)){
+    const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/;
+    if (!dateRegex.test(dob)) {
         return false;
     }
-    const [day, month, year] = dob.split("/").map(Number);
-    if(
+    const [year, month, day] = dob.split("/").map(Number);
+    if (
         day < 1 ||
         day > 31 ||
         month < 1 ||
         month > 12 ||
-        year > 1 ||
+        year < 1900 ||
         year > 2024
     ) {
         return false;
     }
     return true;
+};
+
+const dobFormat = (input) => {
+    const cleanedInput = input.replace(/[^\d]/g, "");
+    const truncatedInput = cleanedInput.substring(0, 8);
+    const formattedInput = truncatedInput.split('').map((char, index) => {
+        if(index === 4 || index === 6) return '/' + char;
+        return char;
+    }).join("");
+    return formattedInput;
 };
 
 const validateName = (forename, surname) => {
@@ -58,8 +68,13 @@ const validateTeams = (teams, allTeams) => {
         return true;
     }
     const arrayTeams = teams.split(",").map((team) => team.trim().toLowerCase());
-    const toLowerCaseAllTeams = allTeams.map((team) => team.toLowerCase());
-    return arrayTeams.every((team) => toLowerCaseAllTeams.includes(team));
+    const teamNames = allTeams.map((team) => {
+        if(typeof team === 'string'){
+            return team.toLowerCase();
+        }
+        return team.name.toLowerCase();
+    });
+    return arrayTeams.every((team) => teamNames.includes(team));
 };
 
 const isDriverExists = async (forename, surname) => {
@@ -81,16 +96,6 @@ const mayusFirstWord = (str) => {
         words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
     }
     return words.join(" ");
-};
-
-const dobFormat = (input) => {
-    const cleanedInput = input.replace(/[^\d]/g, "");
-    const truncatedInput = cleanedInput.substring(0, 8);
-    const formattedInput = truncatedInput.split('').map((char, index) => {
-        if(index === 2 || index === 4) return '/' + char;
-        return char;
-    }).join("");
-    return formattedInput;
 };
 
 export {

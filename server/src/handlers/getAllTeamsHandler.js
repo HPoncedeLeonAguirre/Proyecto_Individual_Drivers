@@ -2,11 +2,10 @@ const { getAllTeams } = require('../controllers/getAllTeams');
 
 const getAllTeamsHandler = async (req, res) => {
     try {
-        const teams = await getAllTeams();
-        return res.json(teams);
+        return getAllTeams(req, res.json.bind(res));
     } catch (error) {
         console.error('Hubo un error en el handler al obtener los teams:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        return res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
 

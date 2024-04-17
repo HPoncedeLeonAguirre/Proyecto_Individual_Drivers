@@ -11,7 +11,7 @@
 .formTitle {
     font-size: 34px;
     font-weight: bold;
-    color: #ffffff;
+    color: #900;
     margin-block-start: 10px;
     margin-block-end: 0;
     border-bottom: solid white 1px;
@@ -36,7 +36,7 @@
 
 .formLabel {
     font-size: 28px;
-    color: #ffffff;
+    color: #900;
     margin: 10px;
     text-align: left;
     margin-left: calc(10%);

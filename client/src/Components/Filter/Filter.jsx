@@ -4,8 +4,8 @@ import { setOrderByName, setOrderByDob } from '../../Redux/Actions/actions';
 import './filter.css';
 
 const Filter = ({ teams, handleFilter }) => {
-    const globalStateFilter = useSelector((state) => state.filter);
-    const [stateFilter, setStateFilter] = useState(globalStateFilter);
+    const stateFilterGlobal = useSelector((state) => state.filter);
+    const [stateFilter, setStateFilter] = useState(stateFilterGlobal);
     const globalSelectedOrder = useSelector((state) => state.selectedOrder);
     const globalSelectedDirection = useSelector((state) => state.selectedDirection);
     const [selectedOrder, setSelectedOrder] = useState(globalSelectedOrder);
@@ -29,7 +29,7 @@ const Filter = ({ teams, handleFilter }) => {
 
     useEffect(() => {
         handleFilter(stateFilter);
-    }, [handleFilter, stateFilter, globalStateFilter]);
+    }, [handleFilter, stateFilter, stateFilterGlobal]);
 
     useEffect(() => {
         if(selectedOrder === "name" || selectedOrder === "dob"){
@@ -57,7 +57,7 @@ const Filter = ({ teams, handleFilter }) => {
             </div>
             <div className='selectContainerHome'>
                 <label className='labelOrderHome'>Origen: </label>
-                <select value={globalStateFilter.origin} name='origin' 
+                <select value={stateFilterGlobal.origin} name='origin' 
                 onChange={handleChange} className='selectOrderHome'>
                     <option value="all">Todos los Drivers</option>
                     <option value="DB">Mis Drivers</option>
@@ -66,11 +66,11 @@ const Filter = ({ teams, handleFilter }) => {
             </div>
             <div className='selectContainerHome rightBorder'>
                 <label className='labelOrderHome'>Team: </label>
-                <select value={globalStateFilter.teams} onChange={handleChange}
+                <select value={stateFilterGlobal.teams} onChange={handleChange}
                 className='selectOrderHome' name='teams'>
                     <option value="all">Todos los teams</option>
                     {teams.map((team) => (
-                        <option key={team.id} value={team.id}>{team.name}</option>
+                        <option key={team} value={team}>{team}</option>
                     ))}
                 </select>
             </div>

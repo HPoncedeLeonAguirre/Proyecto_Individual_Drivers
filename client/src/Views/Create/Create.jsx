@@ -36,9 +36,12 @@ const Form = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        fetch('http//localhost:3001/teams')
+        fetch('http://localhost:3001/teams')
         .then((response) => response.json())
-        .then((data) => setTeamsApi(data))
+        .then((data) => {
+            const teamNames = data.map((team) => team.name);
+            console.log('Teams names:', teamNames);
+            setTeamsApi(data)})
         .catch((error) => console.error('Hubo un error al buscar los teams:', error));
     }, []);
 
@@ -101,7 +104,7 @@ const Form = () => {
             return false;
         }
         if(!validateDate(dob)){
-            setDobError("La fecha de nacimiento debe estar en formato dd/mm/yyyy.");
+            setDobError("La fecha de nacimiento debe estar en formato yyyy/mm/dd.");
             return false;
         }
         if(!validateName(forename, surname)){
@@ -205,7 +208,7 @@ const Form = () => {
                         id='dob'
                         value={dob}
                         onChange={handleChangeDOB}
-                        placeholder='Ingrese la fecha de nacimiento (dd/mm/yyyy)'
+                        placeholder='Ingrese la fecha de nacimiento (yyyy/mm/dd)'
                         className='formInput'
                         />
                         {dobError && <div className='formError'>{dobError}</div>}

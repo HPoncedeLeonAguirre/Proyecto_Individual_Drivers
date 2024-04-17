@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import Card from '../../Components/Card/Card';
 import Filter from '../../Components/Filter/Filter';
+import SearchBar from '../../Components/Searchbar/Searchbar';
 import {
     fetchDrivers,
     setFilter,
@@ -11,18 +12,13 @@ import './home.css';
 
 const Home = () => {
     const [loading, setLoading] = useState(true);
-    const globalStateFilter = useSelector((state) => state.filter);
-    const [stateFilter, setStateFilter] = useState(globalStateFilter);
-    const allDrivers = useSelector((state) => state.allDrivers);
+    const stateFilterGlobal = useSelector((state) => state.filter);
+    const [stateFilter, setStateFilter] = useState(stateFilterGlobal);
+    const filteredDrivers = useSelector((state) => state.filteredDrivers);
     const currentPage = useSelector((state) => state.currentPage);
     const driversPerPage = useSelector((state) => state.driversPerPage);
     const [teams, setTeams] = useState([]);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        console.log("allDrivers:", allDrivers);
-        console.log("loading:", loading);
-    }, [allDrivers, loading]);
 
     useEffect(() => {
         dispatch(fetchDrivers())
@@ -41,7 +37,7 @@ const Home = () => {
         const pageWithOutFilter = currentPage;
         dispatch(setFilter(stateFilter));
         const totalPagesWithFilter = Math.ceil(
-            allDrivers.length / driversPerPage
+            (filteredDrivers && filteredDrivers.length / driversPerPage) || 0
         );
         if(totalPagesWithFilter === 0){
             return;
@@ -49,14 +45,16 @@ const Home = () => {
         if(pageWithOutFilter > totalPagesWithFilter){
             dispatch(setPaginate(totalPagesWithFilter));
         }
-    }, [dispatch, stateFilter, driversPerPage, allDrivers.length, currentPage]);
+    }, [dispatch, stateFilter, driversPerPage, filteredDrivers.length, currentPage]);
 
     const handleFilter = (filterData) => {
+        console.log("Filtro aplicado home:", filterData);
         setStateFilter(filterData);
     };
 
     return(
         <main className='home'>
+            <SearchBar />
             <Filter teams={teams} handleFilter={handleFilter} />
             <section className='cardsHome'>
                 {loading ? (
@@ -65,7 +63,7 @@ const Home = () => {
                     alt='Cargando...'
                     />
                 ) : (
-                    allDrivers.slice((currentPage - 1) * driversPerPage,
+                    filteredDrivers.slice((currentPage - 1) * driversPerPage,
                     currentPage * driversPerPage).map((driver) => (
                         <Card key={driver.id} id={driver.id} 
                         name={
@@ -83,7 +81,7 @@ const Home = () => {
                     ))
                 )}
             </section>
-            {parseInt(allDrivers.length) !== 0 && (
+            {parseInt(filteredDrivers.length) !== 0 && (
                 <div className='paginationHome'>
                     <button
                         onClick={() => dispatch(setPaginate(1))}
@@ -102,7 +100,7 @@ const Home = () => {
                     <span className='spanPaginationHome'>{currentPage}</span>
                     <button
                         onClick={() => dispatch(setPaginate(currentPage + 1))}
-                        disabled={currentPage * driversPerPage >= allDrivers.length}
+                        disabled={currentPage * driversPerPage >= filteredDrivers.length}
                         className='buttonPaginationHome'
                     >
                         Siguiente
@@ -110,9 +108,9 @@ const Home = () => {
                     <button
                         onClick={() =>
                             dispatch(
-                                setPaginate(Math.ceil(allDrivers.length / driversPerPage))
+                                setPaginate(Math.ceil(filteredDrivers.length / driversPerPage))
                         )}
-                        disabled={currentPage * driversPerPage >= allDrivers.length}
+                        disabled={currentPage * driversPerPage >= filteredDrivers.length}
                         className='buttonPaginationHome'
                     >
                         Último
